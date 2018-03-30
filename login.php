@@ -2,6 +2,8 @@
 <head>
 <title>Login Page</title>
 <link rel="stylesheet" type="text/css" href="style.css">
+<script src="jquery-1.9.1.min.js" type="text/javascript">
+</script>
 <?php require('conn.php');
 session_start();
 $msg="";
@@ -15,12 +17,14 @@ function storeLoginHistory($conn,$userObj)
 	$uid=$userObj['userid'];
 	$ulogin=$userObj['login'];
 	$ip = getHostByName(getHostName());
-	$sql="INSERT INTO loginhistory(userid,login,logintime,machineip) VALUES('$uid','$ulogin',current_timestamp,'$ip')";
+	//$sql="INSERT INTO loginhistory(userid,login,logintime,machineip) VALUES('$uid','$ulogin',current_timestamp,'$ip')";
 	mysqli_query($conn,$sql);
 	}
 
 ?>
 <script>
+
+$(document).ready(function(){});
 function validate()
 {
 	var uname=document.getElementById("txtUserName").val;
@@ -47,7 +51,7 @@ if(isset($_REQUEST['btnUserLogin'])==true)
 	{	
 		$usr = mysqli_fetch_assoc($result);
 		/////////////////////////////////////
-		storeLoginHistory($conn,$usr);
+		//storeLoginHistory($conn,$usr);
 		/////////////////////////////////////
 		if(isset($_SESSION['loginUserID'])==false)
 		{	
@@ -56,12 +60,15 @@ if(isset($_REQUEST['btnUserLogin'])==true)
 		$admin=$usr["isadmin"];
 		if($admin==1)
 		{
+		//	echo "admin";
 			header('location:home.php');
 		}
 		else
-		{		$_SESSION['loginUserID']=null;
-				$_SESSION['loginUserIDNonAdmin']=$usr['userid'];
-				header('location:home.php');
+		{
+			echo "Non admin";
+			$_SESSION['loginUserID']=null;
+			$_SESSION['loginUserIDNonAdmin']=$usr['userid'];
+			header('location:home.php');
 		}
 		
 	}

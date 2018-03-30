@@ -29,9 +29,26 @@ body{
 
 div.absolute {
     position: absolute;
-    left: 35%;
+    left: 5%;
 	top:15%;
 }
+
+
+
+.gridPos{
+	position: absolute;
+    left: 45%;
+	top:35%;
+	
+}
+
+
+div.formPos {
+    position: absolute;
+    left: 5%;
+	top:15%;
+}
+
 
 
 table.center {
