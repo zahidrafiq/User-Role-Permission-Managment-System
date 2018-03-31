@@ -33,6 +33,7 @@ $(document).ready(Main);
 			var lgnme=$("#txtLoginName").val();
 			var psd=$("#txtUserPassword").val();
 			var unme=$("#txtUserName").val();
+alert(unme);
 			var eml=$("#txtUserEmail").val();
 			var cntry=$("#cmbCountries").val();
 			var role=$(".radrole:checked").val();
@@ -48,22 +49,65 @@ $(document).ready(Main);
 				dataType: "json",
 				url: "api.php",
 				data: userObj,
-				success: Mysucfunction,
+				success: Mysuccfunction,
 				error: OnError
 				};//end of settings.
 				$.ajax(settings);
 				console.log('request sent');
-			}			
-		function Mysucfunction(r){
-				console.log(r);					
+			} //end of else			
+		
+		function Mysuccfunction(r){
+				console.log(r['ID']);
+				addRowInTable(r['ID'],unme,eml);
 		}
+		
 		function OnError(){
 			alert('error has occured');
 		}
-		});
-	}
+	});//end of btnSave function	
+		//////////////////////////////////
+		function addRowInTable(id,uname,email)
+		{//debugger;
+			var table=$("#grid");
+			var tr1=$("<tr>");
+			
+			var td1=$("<td>").text(id);
+			tr1.append(td1);
+			
+			td1=$("<td>").text(uname);
+			tr1.append(td1);
+			
+			td1=$("<td>").text(email);
+			tr1.append(td1);
+			
+			td1=$("<td>");
+			$editBtn=$("<button>").text("Edit");
+			td1.append($editBtn);
+			tr1.append(td1);
+			
+			td1=$("<td>");
+			$deleteBtn=$("<button>").attr("click","delUsr(this);").text("Delete");
+			td1.append($deleteBtn);
+			tr1.append(td1);
+				table.append(tr1);
+			// debugger;
+			// $deleteBtn.click(delUsr(this)); 
+			}//end of addRowInTable.
+	
+	function delUsr(lnk){
+					var $isConfirm = confirm("Record will be deleted. Click Ok to continue and Cancel to Ignore");
+                    if ($isConfirm == true) {
+                        $(lnk).closest("tr").remove();
+                    }
+                    else
+                        return false;
+					}
 
 
+	
+	}//end of Main.
+		
+		
 </script>
 
 
@@ -191,7 +235,30 @@ div.formPos {
 	<th>Edit</th>
 	<th>Delete</th>
 </tr>
-<?php getAllUsers($conn); ?>
+<?php
+$sql="SELECT userid,name,email FROM users";
+			$result=mysqli_query($conn,$sql);
+			$records=mysqli_num_rows($result);
+			if($records>0)
+			{
+				while($row=mysqli_fetch_assoc($result))
+				{
+					$id=$row["userid"];
+					$name=$row["name"];
+					$emal=$row["email"];
+?>
+					<tr>
+						<td><?php echo $id; ?></td>
+						<td><?php echo $name; ?></td>
+						<td><?php echo $emal; ?></td>
+						<td><input type='button'  value='Edit'/></td>
+						<td><input type='button' onclick='delUsr(this);' value='Delete'/></td>
+					</tr>
+<?php					
+				}
+			}
+?>			
+<?php //getAllUsers($conn); ?>
 
 </table>
 </div>

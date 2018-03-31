@@ -82,8 +82,11 @@ function Clear(form)
 					echo "<td>$id</td>";
 					echo "<td>$name</td>";
 					echo "<td>$emal</td>";
-					echo "<td><a href='' onclick='return editUSer(this);'>Edit</a></td>";
-					echo "<td><a href='' onclick='return deleteUser(this);' '$id' name ='deleteLink'>Delete</a></td>";
+				//	echo "<td><a href='' onclick='return editUSer(this);'>Edit</a></td>";
+					//echo "<td><a href='' onclick='return deleteUser(this);' '$id' name ='deleteLink'>Delete</a></td>";
+					echo "<td><input type='button' value='Edit'/></td>";
+					echo "<td><input type='button' value='Delete'/></td>";
+		
 					echo "</tr>";
 					
 				}
