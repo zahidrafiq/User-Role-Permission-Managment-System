@@ -32,16 +32,16 @@ $(document).ready(Main);
 			//Show all Users 
 			var obj = {"Action":"ShowAllUser"};
 				var settings={
-				type: "POST",
-				dataType: "json",
-				url: "api.php",
-				data: obj,
-				success: successOfShowUser,				
-				error: function(){console.log("ERR");}
+					type: "POST",
+					dataType: "json",
+					url: "api.php",
+					data: obj,
+					success: successOfShowUser,				
+					error: function(){console.log("Error to get user's list");}
 				};//end of settings. Action":"ShowAllUser
 				$.ajax(settings);
-				console.log('request sent');
-	//
+				
+	//This function is called when users list is received successfully  
 	function successOfShowUser(response){
 					console.log(response);
 					var table=$("#grid");
@@ -60,6 +60,7 @@ $(document).ready(Main);
 						
 						td1=$("<td>");
 						$editBtn=$("<button>").text("Edit");
+						$editBtn.click(clickOnEditUser);
 						td1.append($editBtn);
 						tr1.append(td1);
 						
@@ -73,31 +74,62 @@ $(document).ready(Main);
 				
 					}
 				}//end of success function of Action:ShowAllUser.
-/////
+	//This function is called on delete event 
 						function clickOnDelUser(){
 							var $isConfirm = confirm("Record will be deleted. Click Ok to continue and Cancel to Ignore");
 							if ($isConfirm == true) {
 								var uid=$(this).closest("tr").find("td:first").text();
-								var link=this;
+								var ref=this; //ref will store pointer to specific delete button that is clicked.
 								var obj={"Action":"Delete","id":uid};
 								var deleteUSer={
 									type: "POST",
 									dataType: "json",
 									url: "api.php",
 									data: obj,
-									success: function(r){console.log(r);
-									$(link).closest("tr").remove();
-									alert("USer is deleted successfully");},
+									success: function(r){
+										$(ref).closest("tr").remove();
+										alert("USer is deleted successfully");
+										},
 									error:  function(){alert("Error! in deleting user");}
 								};//end of deleteUSer AJAX hit.
 								$.ajax(deleteUSer);
 								console.log("delete request send");
-															}
+							}
 							return false;
-						}//end of deleteBtn click event
-			
-	//////////////////////////////////////////////
+						}//end of clickOnDelUser
+	///////////////////////////////////////////////////////////////
+			function clickOnEditUser()
+			{//debugger;
+				var usrId=$(this).closest("tr").find("td:first").text();
+				alert(usrId);
+				var actionObj={"Action":"Edit","id":usrId};
+				var editUsr={
+					type: "POST",dataType: "json", url:"api.php",data: actionObj,
+					success: function(res){console.log("success"+res.email);
+						$("#txtLoginName").val(res.login);
+						$("#txtUserPassword").val(res.password);
+						$("#txtUserName").val(res.name);
+						$("#txtUserEmail").val(res.email);
+						alert(res.isadmin);
+						if(res.isadmin==0){
+							//alert("IF");
+						$("#rad1").attr("checked",true);
+						}else {
+						//	alert("Else");
+							$("#rad2").attr("checked",true);
+						}		
+							
+					},
+					error: function(){alert("ERROR");}
+					
+				};//end of editUser AJAX hit settings obj 
+				$.ajax(editUsr);
+				console.log("edit request send");
+				return false;
+			}
 	
+	///////////////////////////////////////////////////////////////
+							
 	
 			$("#btnSave").click(function(){
 			var lgnme=$("#txtLoginName").val();
@@ -155,7 +187,10 @@ $(document).ready(Main);
 			tr1.append(td1);
 			
 			td1=$("<td>");
-			$deleteBtn=$("<button>").attr("click","delUsr(this)").text("Delete");
+			$deleteBtn=$("<button>").text("Delete");
+			//deleteBtn click event.
+			$deleteBtn.click(clickOnDelUser);
+						
 			td1.append($deleteBtn);
 			tr1.append(td1);
 				table.append(tr1);
@@ -163,15 +198,6 @@ $(document).ready(Main);
 			// $deleteBtn.click(delUsr(this)); 
 			}//end of addRowInTable.
 	
-	function delUsr(lnk){
-					var $isConfirm = confirm("Record will be deleted. Click Ok to continue and Cancel to Ignore");
-                    if ($isConfirm == true) {
-                        $(lnk).closest("tr").remove();
-                    }
-                    else
-                        return false;
-					}
-
 
 	
 	}//end of Main.
@@ -196,54 +222,9 @@ $msg="";
 $usrid=-1;
 $role=0;
 /////////////////////////////
-//$usrid=$_REQUEST['i'];
-/*if($usrid) // If from is loaded to edit record.
-{
-	//values are being set with user's data to set in fields to edit.
-	$usr=getObjById($conn,"users","userid",$usrid);
-	$cntry=getCountryById($conn,$usr['countryid']);
-	$logname=$usr['login'];
-	$passwd=$usr['password'];
-	$uname=$usr['name'];
-	$email=$usr['email'];
-	$role=$usr['isadmin'];
-	$country=$cntry['name'];
-}*/
 ?>
 
 
-<?php
-	// if(isset($_REQUEST['btnSave'])==true)
-	// {	
-		// //$uid=$_REQUEST['i'];
-		// $log=$_REQUEST['txtLoginName'];
-		// $paswd=$_REQUEST['txtUserPassword'];
-		// $nme=$_REQUEST['txtUserName'];
-		// $emal=$_REQUEST['txtUserEmail'];
-		// $cntry=$_REQUEST['cmbCountries'];
-		// $role=$_REQUEST['radrole'];
-		// //if save button is clicked to edit existing record .
-		// //if($_REQUEST['i']>0)
-		// //{	
-			// //$query="UPDATE users SET login='$log' , password='$paswd' , name='$nme' ,email='$emal' ,countryid='$cntry' ,isadmin='$role' WHERE userid='$uid'";
-		// //}
-		// //else  //If button is clicked for new record.
-		// //{
-			// $loginUsrId=$_SESSION['loginUserID'];
-			 // $query="INSERT INTO users( login , password , name, email , countryid ,createdon,createdby,isadmin) 
-			// VALUES ('$log','$paswd','$nme','$emal','$cntry',current_timestamp,'$loginUsrId','$role')";
-	// //	}
-			// $b=mysqli_query($conn,$query);
-			// if($b==true)
-			// {
-			// //	header('Location: usersList.php?i');
-			// }
-			// else
-			// {
-				// echo "Error in database query! " . $query . "<br>" . mysqli_error($conn);
-			// }
-	// }//end of outermost if.
-?>
 </head>
 
 <body>
@@ -269,15 +250,15 @@ div.formPos {
 	<h3 class="chngBackgrnd" style="padding-left:60px;font-size:35">Users Managment</h3><br>
 		<div style="padding-left:80px">
 		<span><b>Login:<b></span><br>
-		<input type="text" name="txtLoginName" id="txtLoginName" value="<?php echo $logname; ?>" autofocus><br><br>
+		<input type="text" name="txtLoginName" id="txtLoginName" autofocus><br><br>
 		<span><b>password:<b></span><br>
-		<input type="password" name="txtUserPassword" id="txtUserPassword" value="<?php echo $passwd; ?>"><br><br>
+		<input type="password" name="txtUserPassword" id="txtUserPassword"><br><br>
 		<span><b>Name:<b></span><br>
-		<input type="text" name="txtUserName" id="txtUserName" value="<?php echo $uname; ?>"><br><br>
+		<input type="text" name="txtUserName" id="txtUserName"><br><br>
 		<span><b>E-mail:<b></span><br>
-		<input type="email" name="txtUserEmail" id="txtUserEmail" value="<?php echo $email; ?>"><br><br>
-		<input type="radio" class="radrole" name="radrole1" value=0 checked>&nbsp Regular User<br><br>
-		<input type="radio" class="radrole" name="radrole1" value=1 >&nbsp Admin<br>
+		<input type="email" name="txtUserEmail" id="txtUserEmail" ><br><br>
+		<input type="radio" class="radrole" name="radrole1" id="rad1" value=0 checked>&nbsp Regular User<br><br>
+		<input type="radio" class="radrole" name="radrole1" id="rad2" value=1 >&nbsp Admin<br>
 		<br><br>
 		<span><b>Country<b></span><br>
 		
