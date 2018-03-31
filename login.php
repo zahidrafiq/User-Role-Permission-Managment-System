@@ -2,13 +2,12 @@
 <head>
 <title>Login Page</title>
 <link rel="stylesheet" type="text/css" href="style.css">
-<script src="jquery-1.9.1.min.js" type="text/javascript">
-</script>
+<script src="jquery-1.9.1.min.js" type="text/javascript"></script>
+
 <?php require('conn.php');
 session_start();
 $msg="";
 $usr="";
-
 ?>
 
 <?php
@@ -19,26 +18,29 @@ function storeLoginHistory($conn,$userObj)
 	$ip = getHostByName(getHostName());
 	//$sql="INSERT INTO loginhistory(userid,login,logintime,machineip) VALUES('$uid','$ulogin',current_timestamp,'$ip')";
 	mysqli_query($conn,$sql);
-	}
+}
 
 ?>
 <script>
-
-$(document).ready(function(){});
-function validate()
-{
-	var uname=document.getElementById("txtUserName").val;
-	var psd=document.getElementById("txtUserPassword").val;
-	if(uname=="" || psd=="")
-	{
+		
+		jQuery(document).ready(function(){
+			//alert('Pakistan Zindabad!');
+		$("#btnUserLogin").click(function(){
+		var username=$("#txtUserName").val();
+		var password=$("#txtUserPassword").val();
+		if(username=="" || password==""){
 		alert("Please fill all fields!");
 		return false;
-	}
-	return true;
-}
-</script>
-</head>
-<?php
+		}
+		else{		
+			return true;
+		}
+	});
+
+		
+		});
+	</script>
+	<?php
 
 if(isset($_REQUEST['btnUserLogin'])==true)
 {
@@ -51,7 +53,7 @@ if(isset($_REQUEST['btnUserLogin'])==true)
 	{	
 		$usr = mysqli_fetch_assoc($result);
 		/////////////////////////////////////
-		//storeLoginHistory($conn,$usr);
+		storeLoginHistory($conn,$usr);
 		/////////////////////////////////////
 		if(isset($_SESSION['loginUserID'])==false)
 		{	
@@ -60,15 +62,12 @@ if(isset($_REQUEST['btnUserLogin'])==true)
 		$admin=$usr["isadmin"];
 		if($admin==1)
 		{
-		//	echo "admin";
 			header('location:home.php');
 		}
 		else
-		{
-			echo "Non admin";
-			$_SESSION['loginUserID']=null;
-			$_SESSION['loginUserIDNonAdmin']=$usr['userid'];
-			header('location:home.php');
+		{		$_SESSION['loginUserID']=null;
+				$_SESSION['loginUserIDNonAdmin']=$usr['userid'];
+				header('location:home.php');
 		}
 		
 	}
@@ -80,6 +79,9 @@ if(isset($_REQUEST['btnUserLogin'])==true)
 }	
 ?>
 
+
+</head>
+ 
 <body>
 <h1>SECURITY MANAGER</h1>
 <br>
@@ -88,10 +90,10 @@ if(isset($_REQUEST['btnUserLogin'])==true)
 	<h3 class="chngBackgrnd" style="padding-left:60px;font-size:35">User Login</h3><br>
 		<div style="padding-left:20%;">
 		<span><b>username</b></span><br>
-		<input type="text" name="txtUserName" name="username" autofocus><br><br>
+		<input type="text" id="txtUserName" name="txtUserName" autofocus><br><br>
 		<span><b>password</b></span><br>
-		<input type="password" name="txtUserPassword" name="password"><br><br>
-		<input type="submit" onclick="return validate();" name="btnUserLogin" value="Login">
+		<input type="password" id="txtUserPassword" name="txtUserPassword"><br><br>
+		<input type="submit"  id="btnUserLogin" name="btnUserLogin" value="Login">
 	</div>
 </form>
 

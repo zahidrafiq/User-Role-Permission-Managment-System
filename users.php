@@ -22,6 +22,53 @@ session_start();
 <head>
 <title>Add User</title>
 <link rel="stylesheet" type="text/css" href="style.css">
+<script src="jquery-1.9.1.min.js" type="text/javascript"></script>
+
+<script>
+$(document).ready(Main);
+	
+	function Main(){ 
+	alert("ready");
+			$("#btnSave").click(function(){
+			var lgnme=$("#txtLoginName").val();
+			var psd=$("#txtUserPassword").val();
+			var unme=$("#txtUserName").val();
+			var eml=$("#txtUserEmail").val();
+			var cntry=$("#cmbCountries").val();
+			var role=$(".radrole:checked").val();
+			if(lgnme=="" || psd=="" || eml=="" || cntry<1 || unme==""){
+				alert ("Please fill all fields!");
+				return false;
+			}
+			else{
+			//	
+			var userObj = {"Action":"Save","Login":lgnme,"Password":psd,"Name":unme,"Email":eml,"Country":cntry,"Role":role};
+				var settings={
+				type: "GET",
+				dataType: "json",
+				url: "api.php",
+				data: userObj,
+				success: Mysucfunction,
+				error: OnError
+				};//end of settings.
+				$.ajax(settings);
+				console.log('request sent');
+			}			
+		function Mysucfunction(r){
+				console.log(r);					
+		}
+		function OnError(){
+			alert('error has occured');
+		}
+		});
+	}
+
+
+</script>
+
+
+
+
 
 <?php
 //These variables are used to set values of fields.
@@ -53,60 +100,37 @@ $role=0;
 
 
 <?php
-	if(isset($_REQUEST['btnSave'])==true)
-	{	
-		$uid=$_REQUEST['i'];
-		$log=$_REQUEST['txtLoginName'];
-		$paswd=$_REQUEST['txtUserPassword'];
-		$nme=$_REQUEST['txtUserName'];
-		$emal=$_REQUEST['txtUserEmail'];
-		$cntry=$_REQUEST['cmbCountries'];
-		$role=$_REQUEST['radrole'];
-		//if save button is clicked to edit existing record .
-		//if($_REQUEST['i']>0)
-		//{	
-			//$query="UPDATE users SET login='$log' , password='$paswd' , name='$nme' ,email='$emal' ,countryid='$cntry' ,isadmin='$role' WHERE userid='$uid'";
-		//}
-		//else  //If button is clicked for new record.
-		//{
-			$loginUsrId=$_SESSION['loginUserID'];
-			 $query="INSERT INTO users( login , password , name, email , countryid ,createdon,createdby,isadmin) 
-			VALUES ('$log','$paswd','$nme','$emal','$cntry',current_timestamp,'$loginUsrId','$role')";
-	//	}
-			$b=mysqli_query($conn,$query);
-			if($b==true)
-			{
-				header('Location: usersList.php?i');
-			}
-			else
-			{
-				echo "Error in database query! " . $query . "<br>" . mysqli_error($conn);
-			}
-	}//end of outermost if.
+	// if(isset($_REQUEST['btnSave'])==true)
+	// {	
+		// //$uid=$_REQUEST['i'];
+		// $log=$_REQUEST['txtLoginName'];
+		// $paswd=$_REQUEST['txtUserPassword'];
+		// $nme=$_REQUEST['txtUserName'];
+		// $emal=$_REQUEST['txtUserEmail'];
+		// $cntry=$_REQUEST['cmbCountries'];
+		// $role=$_REQUEST['radrole'];
+		// //if save button is clicked to edit existing record .
+		// //if($_REQUEST['i']>0)
+		// //{	
+			// //$query="UPDATE users SET login='$log' , password='$paswd' , name='$nme' ,email='$emal' ,countryid='$cntry' ,isadmin='$role' WHERE userid='$uid'";
+		// //}
+		// //else  //If button is clicked for new record.
+		// //{
+			// $loginUsrId=$_SESSION['loginUserID'];
+			 // $query="INSERT INTO users( login , password , name, email , countryid ,createdon,createdby,isadmin) 
+			// VALUES ('$log','$paswd','$nme','$emal','$cntry',current_timestamp,'$loginUsrId','$role')";
+	// //	}
+			// $b=mysqli_query($conn,$query);
+			// if($b==true)
+			// {
+			// //	header('Location: usersList.php?i');
+			// }
+			// else
+			// {
+				// echo "Error in database query! " . $query . "<br>" . mysqli_error($conn);
+			// }
+	// }//end of outermost if.
 ?>
-
-<script>
-function validate()
-{
-	var lgnme=document.getElementById("txtLoginName").value;
-	var psd=document.getElementById("txtUserPassword").value;
-	var unme=document.getElementById("txtUserName").value;
-	var eml=document.getElementById("txtUserEmail").value;
-	var cntry=document.getElementById("cmbCountries").value;
-	if(lgnme=="" || psd=="" || eml=="" || cntry<1 || unme=="")
-	{
-		alert ("Please fill all fields!");
-		return false;
-	}
-	else
-	{	
-		return true;
-	}
-				
-}
-
-
-</script>
 </head>
 
 <body>
@@ -132,27 +156,26 @@ div.formPos {
 	<h3 class="chngBackgrnd" style="padding-left:60px;font-size:35">Users Managment</h3><br>
 		<div style="padding-left:80px">
 		<span><b>Login:<b></span><br>
-		<input type="text" name="txtLoginName" id="txtLoginName" value="<?php echo $logname; ?>" ><br><br>
+		<input type="text" name="txtLoginName" id="txtLoginName" value="<?php echo $logname; ?>" autofocus><br><br>
 		<span><b>password:<b></span><br>
 		<input type="password" name="txtUserPassword" id="txtUserPassword" value="<?php echo $passwd; ?>"><br><br>
 		<span><b>Name:<b></span><br>
 		<input type="text" name="txtUserName" id="txtUserName" value="<?php echo $uname; ?>"><br><br>
 		<span><b>E-mail:<b></span><br>
 		<input type="email" name="txtUserEmail" id="txtUserEmail" value="<?php echo $email; ?>"><br><br>
-		<input type="radio" name="radrole" value=0 <?php if($role==0)echo 'checked' ?>>&nbsp Regular User<br><br>
-		<input type="radio" name="radrole" value=1 <?php if($role==1)echo 'checked' ?>>&nbsp Admin<br>
-		<input type="text" name="i" hidden value=<?php echo $usrid; ?> >
+		<input type="radio" class="radrole" name="radrole1" value=0 checked>&nbsp Regular User<br><br>
+		<input type="radio" class="radrole" name="radrole1" value=1 >&nbsp Admin<br>
 		<br><br>
 		<span><b>Country<b></span><br>
 		
 		<select name="cmbCountries" id="cmbCountries">
 		<option value="0">--Select--</option>
 		<?php
-			//getAllCountries($conn,$country );
+			getAllCountries($conn,$country );
 		?>
 		</select>
 		<br><br><br>
-		<br><input class="btn" type="submit" name="btnSave" onclick="return validate();" value="Save">
+		<br><input class="btn" type="button" name="btnSave" id="btnSave" value="Save">
 		<input class="btn" type="button" onclick="Clear('adduserform');" id="btnClear"  value="Clear">
 		</div>
 	</div>
