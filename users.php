@@ -29,11 +29,80 @@ $(document).ready(Main);
 	
 	function Main(){ 
 	alert("ready");
+			//Show all Users 
+			var obj = {"Action":"ShowAllUser"};
+				var settings={
+				type: "POST",
+				dataType: "json",
+				url: "api.php",
+				data: obj,
+				success: successOfShowUser,				
+				error: function(){console.log("ERR");}
+				};//end of settings. Action":"ShowAllUser
+				$.ajax(settings);
+				console.log('request sent');
+	//
+	function successOfShowUser(response){
+					console.log(response);
+					var table=$("#grid");
+					for(var i=0;i<response.data.length;i++)
+					{
+						console.log(i);
+						var tr1=$("<tr>");
+						var td1=$("<td>").text(response.data[i].userid);
+						tr1.append(td1);
+			
+						td1=$("<td>").text(response.data[i].name);
+						tr1.append(td1);
+						
+						td1=$("<td>").text(response.data[i].email);
+						tr1.append(td1);
+						
+						td1=$("<td>");
+						$editBtn=$("<button>").text("Edit");
+						td1.append($editBtn);
+						tr1.append(td1);
+						
+						td1=$("<td>");
+						$deleteBtn=$("<button>").text("Delete");
+						//event of deleteBtn click event.
+						$deleteBtn.click(clickOnDelUser);
+						td1.append($deleteBtn);
+						tr1.append(td1);
+						table.append(tr1);
+				
+					}
+				}//end of success function of Action:ShowAllUser.
+/////
+						function clickOnDelUser(){
+							var $isConfirm = confirm("Record will be deleted. Click Ok to continue and Cancel to Ignore");
+							if ($isConfirm == true) {
+								var uid=$(this).closest("tr").find("td:first").text();
+								var link=this;
+								var obj={"Action":"Delete","id":uid};
+								var deleteUSer={
+									type: "POST",
+									dataType: "json",
+									url: "api.php",
+									data: obj,
+									success: function(r){console.log(r);
+									$(link).closest("tr").remove();
+									alert("USer is deleted successfully");},
+									error:  function(){alert("Error! in deleting user");}
+								};//end of deleteUSer AJAX hit.
+								$.ajax(deleteUSer);
+								console.log("delete request send");
+															}
+							return false;
+						}//end of deleteBtn click event
+			
+	//////////////////////////////////////////////
+	
+	
 			$("#btnSave").click(function(){
 			var lgnme=$("#txtLoginName").val();
 			var psd=$("#txtUserPassword").val();
 			var unme=$("#txtUserName").val();
-alert(unme);
 			var eml=$("#txtUserEmail").val();
 			var cntry=$("#cmbCountries").val();
 			var role=$(".radrole:checked").val();
@@ -86,7 +155,7 @@ alert(unme);
 			tr1.append(td1);
 			
 			td1=$("<td>");
-			$deleteBtn=$("<button>").attr("click","delUsr(this);").text("Delete");
+			$deleteBtn=$("<button>").attr("click","delUsr(this)").text("Delete");
 			td1.append($deleteBtn);
 			tr1.append(td1);
 				table.append(tr1);
@@ -235,29 +304,6 @@ div.formPos {
 	<th>Edit</th>
 	<th>Delete</th>
 </tr>
-<?php
-$sql="SELECT userid,name,email FROM users";
-			$result=mysqli_query($conn,$sql);
-			$records=mysqli_num_rows($result);
-			if($records>0)
-			{
-				while($row=mysqli_fetch_assoc($result))
-				{
-					$id=$row["userid"];
-					$name=$row["name"];
-					$emal=$row["email"];
-?>
-					<tr>
-						<td><?php echo $id; ?></td>
-						<td><?php echo $name; ?></td>
-						<td><?php echo $emal; ?></td>
-						<td><input type='button'  value='Edit'/></td>
-						<td><input type='button' onclick='delUsr(this);' value='Delete'/></td>
-					</tr>
-<?php					
-				}
-			}
-?>			
 <?php //getAllUsers($conn); ?>
 
 </table>
