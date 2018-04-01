@@ -47,7 +47,7 @@ function confirmation()
    <a class="navbar" href="roles.php">Role Managment</a> 
    <a class="navbar" href="permissions.php">Permissions Managment</a> 
    <a class="navbar" href="rolePermission.php">Role-Permission Assignment</a> 
-   <a class="navbar" href="userRoleList.php?i=0">User-Role Assignment</a> 
+   <a class="navbar" href="userRole.php">User-Role Assignment</a> 
    <a class="navbar" href="loginhistory.php">Login History</a> 
    <a class="navbar" onclick="return confirmation();" href="logout.php">Logout</a> 
 </div>
