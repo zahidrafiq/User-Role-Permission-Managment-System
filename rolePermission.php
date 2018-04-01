@@ -87,33 +87,52 @@ $(document).ready(Main);
 			//This function is called when users list is received successfully  
 			function successOfShowAll(response){
 				console.log(response);	
-						var roleName;
-					var actionObj={"Action":"ShowAll","Table":"roles"};
-				var settings={
-					type: "POST",dataType: "json", url:"api.php",data: actionObj,
-					success: function(res){console.log(res);
-						 //name of role.		
-					},
-					error: function(){alert("Error in getting Role Name");}
-					
-				};//end of editUser AJAX hit settings obj 
-				$.ajax(settings);
-				console.log("rolename request send");
-					
-				
-				
-				
+									
 				var table=$("#grid");
 				for(var i=0;i<response.length;i++)
 				{
+					//Displaying ID in table.
 					var tr1=$("<tr>");
 					var td1=$("<td>").text(response[i].id);
 					tr1.append(td1);
-					//
-			//
-						
-					td1=$("<td>").text(response[i].permissionid);
+		/************************************************************************/
+					//Displaying Role Name after converting from roleid.
+					var roleName;
+					var actionObj={"Action":"GetObj","Table":"roles","PK":"roleid","tId":response[i].roleid};
+					var settings={
+					type: "POST",dataType: "json", url:"api.php",data: actionObj,
+					success: function(res){console.log(res);
+						roleName=res.name; //name of role.		
+					},
+					error: function(){alert("Error in getting Role Name");}
+					
+				};//end of AJAX hit to get roleObj
+				$.ajaxSetup({async: false}); //TO make synchronous.
+				$.ajax(settings);
+				$.ajaxSetup({async: true});//Again Setting to asynchronous
+				//this line will be executed when AJAX hit response will return.
+					td1=$("<td>").text(roleName);
 					tr1.append(td1);
+	/***************************************************************************/
+		//Displaying Permission Name after converting from roleid.
+					var permName;
+					var actionObj={"Action":"GetObj","Table":"permissions","PK":"permissionid","tId":response[i].permissionid};
+					var settings={
+					type: "POST",dataType: "json", url:"api.php",data: actionObj,
+					success: function(res){console.log(res);
+						permName=res.name; //name of role.		
+					},
+					error: function(){alert("Error in getting Permission Name");}
+					
+				};//end of AJAX hit to get roleObj
+				$.ajaxSetup({async: false}); //TO make synchronous.
+				$.ajax(settings);
+				$.ajaxSetup({async: true});//Again Setting to asynchronous
+				//This line will be executed when AJAX hit response will return.
+					td1=$("<td>").text(permName);
+					tr1.append(td1);
+/**************************************************************************/			
+					
 						
 					td1=$("<td>");
 					$editBtn=$("<button>").text("Edit");
@@ -221,17 +240,18 @@ $(document).ready(Main);
 			} //end of else			
 		
 		function Mysuccfunction(r){
-			console.log(r);
+			//console.log("SAVE: " +r);
 				if(r.act=="edit")
 				{
 					var i=localStorage.getItem("editRowIndex");
 					document.getElementById("grid").deleteRow(i);
 				}
+				//alert(r['ID']);
 				addRowInTable(r['ID'],role,per);
 		}
 		
 		function OnError(){
-			alert('Error occured in saving Role');
+			alert('Error occured in saving RolePermission');
 		}
 	});//end of btnSave function	
 		// //////////////////////////////////
@@ -242,12 +262,44 @@ $(document).ready(Main);
 			
 			var td1=$("<td>").text(id);
 			tr1.append(td1);
-			
-			td1=$("<td>").text(d1);
-			tr1.append(td1);
-			
-			td1=$("<td>").text(d2);
-			tr1.append(td1);
+
+		/************************************************************************/
+					//Displaying Role Name after converting from roleid.
+					var roleName;
+					var actionObj={"Action":"GetObj","Table":"roles","PK":"roleid","tId":d1};
+					var settings={
+					type: "POST",dataType: "json", url:"api.php",data: actionObj,
+					success: function(res){console.log(res);
+						roleName=res.name; //name of role.		
+					},
+					error: function(){alert("Error in getting Role Name");}
+					
+				};//end of AJAX hit to get roleObj
+				$.ajaxSetup({async: false}); //TO make synchronous.
+				$.ajax(settings);
+				$.ajaxSetup({async: true});//Again Setting to asynchronous
+				//this line will be executed when AJAX hit response will return.
+					td1=$("<td>").text(roleName);
+					tr1.append(td1);
+	/***************************************************************************/
+		//Displaying Permission Name after converting from roleid.
+					var permName;
+					var actionObj={"Action":"GetObj","Table":"permissions","PK":"permissionid","tId":d2};
+					var settings={
+					type: "POST",dataType: "json", url:"api.php",data: actionObj,
+					success: function(res){console.log(res);
+						permName=res.name; //name of role.		
+					},
+					error: function(){alert("Error in getting Permission Name");}
+					
+				};//end of AJAX hit to get roleObj
+				$.ajaxSetup({async: false}); //TO make synchronous.
+				$.ajax(settings);
+				$.ajaxSetup({async: true});//Again Setting to asynchronous
+				//This line will be executed when AJAX hit response will return.
+					td1=$("<td>").text(permName);
+					tr1.append(td1);
+/**************************************************************************/			
 			
 			td1=$("<td>");
 			//$editBtn=$("<button>").text("Edit");

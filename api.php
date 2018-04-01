@@ -99,6 +99,25 @@ if(isset($_REQUEST['Action']) && !empty($_REQUEST['Action']))
 				echo json_encode(false);
 			}
 		}
+		else if($action=="GetObj"){	//it will not set 	$_SESSION['editId']
+				//{"Action":"GetObj","Table":"roles","PK":"primary_key","tId":rId}
+			$table=$_REQUEST['Table'];
+			$pk=$_REQUEST['PK'];
+			$targetId=$_REQUEST['tId'];
+			
+			$sql="SELECT * FROM $table WHERE $pk='$targetId'";
+			$rs=mysqli_query($conn,$sql);
+			if(mysqli_num_rows($rs)>0)
+			{
+				$obj=mysqli_fetch_assoc($rs);
+				echo json_encode($obj);
+			}
+			else
+			{
+				echo json_encode(false);
+			}
+
+		}
 		else if($action=="Delete"){//It will delete any record from any table.
 			//data fromat {"Action":"Delete","Table":"table_name","PK":"pk_of_table","id":id_of_record_To-delete }
 			$targetId=$_REQUEST['id'];
@@ -221,11 +240,12 @@ if(isset($_REQUEST['Action']) && !empty($_REQUEST['Action']))
 			//data format {"Action":"SaveRolePerm","Role":role,"Perm":per};
 			$role=$_REQUEST['Role'];
 			$perm=$_REQUEST['Perm'];
+			
 			$editID=$_SESSION['editId']; //ID of user which you	want to edit
-	//		echo json_encode($perm."  ".$editID);
+			//echo json_encode($role."  ".$editID);
 			//if save button is clicked to edit existing record .
-			 if($editID>0)
-			 {
+			  if($editID>0)
+			  {
 				$query="UPDATE rolepermission SET roleid='$role' , permissionid='$perm' WHERE id='$editID'";
 				$_SESSION['editId']=-1;
 				$obj=array("ID"=>$editID,"act"=>"edit");
@@ -237,16 +257,15 @@ if(isset($_REQUEST['Action']) && !empty($_REQUEST['Action']))
 				VALUES('$role','$perm')";
 			}
 				$b=mysqli_query($conn,$query);
-				if($b==true )
+				if($b==true)
 				{
 					$sql="SELECT * FROM rolepermission WHERE roleid='$role' AND permissionid='$perm'";
 					$result=mysqli_query($conn,$sql);
 					$row=mysqli_fetch_assoc($result);
 					$pId=$row["id"]; //id of permission which record is recently saved or edited.
 					$obj=array("ID"=>$pId); //create obj in php
-					//alert('Added Succesfully');
 				}
-				//print_r($obj);
+			//	print_r($obj);
 			$jsonObj=json_encode($obj); //To Convert in JSON in PHP.
 			echo $jsonObj;
 
