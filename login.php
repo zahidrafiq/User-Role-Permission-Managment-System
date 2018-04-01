@@ -3,7 +3,15 @@
 <title>Login Page</title>
 <link rel="stylesheet" type="text/css" href="style.css">
 <script src="jquery-1.9.1.min.js" type="text/javascript"></script>
+<style>
+.gridPos{
+	position: absolute;
+    left: 35%;
+	top:20%;
+	
+}
 
+</style>
 <?php require('conn.php');
 session_start();
 $msg="";
@@ -24,7 +32,6 @@ function storeLoginHistory($conn,$userObj)
 <script>
 		
 		jQuery(document).ready(function(){
-			//alert('Pakistan Zindabad!');
 		$("#btnUserLogin").click(function(){
 		var username=$("#txtUserName").val();
 		var password=$("#txtUserPassword").val();
@@ -85,7 +92,7 @@ if(isset($_REQUEST['btnUserLogin'])==true)
 <body>
 <h1>SECURITY MANAGER</h1>
 <br>
-	<div  class="absolute" style="width:400px;height:500px;border:3px solid black;background-color:white;">
+	<div  class="gridPos" style="width:400px;height:500px;border:3px solid black;background-color:white;">
 <form method="GET" action="">
 	<h3 class="chngBackgrnd" style="padding-left:60px;font-size:35">User Login</h3><br>
 		<div style="padding-left:20%;">
@@ -93,7 +100,7 @@ if(isset($_REQUEST['btnUserLogin'])==true)
 		<input type="text" id="txtUserName" name="txtUserName" autofocus><br><br>
 		<span><b>password</b></span><br>
 		<input type="password" id="txtUserPassword" name="txtUserPassword"><br><br>
-		<input type="submit"  id="btnUserLogin" name="btnUserLogin" value="Login">
+		<input type="submit" class="btn" id="btnUserLogin" name="btnUserLogin" value="Login">
 	</div>
 </form>
 

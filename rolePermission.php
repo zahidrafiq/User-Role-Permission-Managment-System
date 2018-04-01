@@ -20,7 +20,7 @@ session_start();
 
 <html>
 <head>
-<title>Add User</title>
+<title>Role Perm</title>
 <link rel="stylesheet" type="text/css" href="style.css">
 <script src="jquery-1.9.1.min.js" type="text/javascript"></script>
 
@@ -28,7 +28,6 @@ session_start();
 $(document).ready(Main);
 	
 	function Main(){ 
-	alert("ready");
 			//Start of AJAX hit to get All Roles.
 			var obj = {"Action":"ShowAll","Table":"roles"};
 				var settings={
@@ -83,7 +82,9 @@ $(document).ready(Main);
 				$.ajax(settings);
 				console.log("request send to get roles");
 				//End of AJAX hit to show all rolepermission
-				
+/********************************************************************/
+//////////////////////////////////////////////////////////////////////
+/********************************************************************/
 			//This function is called when users list is received successfully  
 			function successOfShowAll(response){
 				console.log(response);	
@@ -149,7 +150,12 @@ $(document).ready(Main);
 				
 					}
 				}//end of success function of Action:ShowAll.
-	//This function is called on delete event 
+
+/********************************************************************/
+//////////////////////////////////////////////////////////////////////
+/********************************************************************/
+
+				//This function is called on delete event 
 						function clickOnDelRolePerm(){
 							var $isConfirm = confirm("Record will be deleted. Click Ok to continue and Cancel to Ignore");
 							if ($isConfirm == true) {
@@ -172,8 +178,10 @@ $(document).ready(Main);
 							}
 							return false;
 						}//end of clickOnDelUser
-	///////////////////////////////////////////////////////////////
-			function clickOnEditRolePerm()
+/********************************************************************/
+//////////////////////////////////////////////////////////////////////
+/********************************************************************/	
+	function clickOnEditRolePerm()
 			{//debugger;
 				var rId=$(this).closest("tr").find("td:first").text();
 				var rowNum=$(this).closest("tr").index();
@@ -195,7 +203,10 @@ $(document).ready(Main);
 				return false;
 			}
 	
-	
+
+/********************************************************************/
+//////////////////////////////////////////////////////////////////////
+/********************************************************************/	
 			function getRoleName(tId)
 			{
 				////{"Action":"GetObjToEdit","Table":"roles","PK":"roleid","tId":rId}
@@ -214,8 +225,10 @@ $(document).ready(Main);
 				return rname;
 			}
 	
-	// ///////////////////////////////////////////////////////////////
-							
+	
+/********************************************************************/
+//////////////////////////////////////////////////////////////////////
+/********************************************************************/						
 	
 			$("#btnSave").click(function(){
 			var role=$("#cmbRole").val();
@@ -239,6 +252,10 @@ $(document).ready(Main);
 				console.log('request to save sent');
 			} //end of else			
 		
+
+/********************************************************************/
+//////////////////////////////////////////////////////////////////////
+/********************************************************************/	
 		function Mysuccfunction(r){
 			//console.log("SAVE: " +r);
 				if(r.act=="edit")

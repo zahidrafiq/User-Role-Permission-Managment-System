@@ -27,9 +27,7 @@ session_start();
 <script>
 $(document).ready(Main);
 	
-	function Main(){ 
-	alert("ready");
-			
+	function Main(){ 		
 			//Show all Roles
 			var obj = {"Action":"ShowAll","Table":"permissions"};
 				var settings={
@@ -76,6 +74,10 @@ $(document).ready(Main);
 				
 					}
 				}//end of success function of Action:ShowAll.
+	
+/********************************************************************/
+//////////////////////////////////////////////////////////////////////
+/********************************************************************/
 	//This function is called on delete event 
 						function clickOnDelPerm(){
 							var $isConfirm = confirm("Record will be deleted. Click Ok to continue and Cancel to Ignore");
@@ -99,7 +101,9 @@ $(document).ready(Main);
 							}
 							return false;
 						}//end of clickOnDelUser
-	///////////////////////////////////////////////////////////////
+/********************************************************************/
+//////////////////////////////////////////////////////////////////////
+/********************************************************************/
 			function clickOnEditPerm()
 			{//debugger;
 				var tID=$(this).closest("tr").find("td:first").text();
@@ -122,9 +126,9 @@ $(document).ready(Main);
 				return false;
 			}
 	
-	// ///////////////////////////////////////////////////////////////
-							
-	
+/********************************************************************/
+//////////////////////////////////////////////////////////////////////
+/********************************************************************/
 			$("#btnSave").click(function(){
 			var per=$("#txtPermission").val();
 			var desc=$("#txtDescription").val();
@@ -146,7 +150,10 @@ $(document).ready(Main);
 				$.ajax(settings);
 				console.log('request to save sent');
 			} //end of else			
-		
+	
+/********************************************************************/
+//////////////////////////////////////////////////////////////////////
+/********************************************************************/
 		function Mysuccfunction(r){
 			console.log(r);
 				if(r.act=="edit")
@@ -161,8 +168,11 @@ $(document).ready(Main);
 			alert('Error occured in saving Role');
 		}
 	});//end of btnSave function	
-		// //////////////////////////////////
-		function addRowInTable(id,d1,d2)
+		
+/********************************************************************/
+//////////////////////////////////////////////////////////////////////
+/********************************************************************/
+	function addRowInTable(id,d1,d2)
 		{//debugger;
 			var table=$("#grid");
 			var tr1=$("<tr>");

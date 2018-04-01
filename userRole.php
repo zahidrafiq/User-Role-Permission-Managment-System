@@ -27,9 +27,7 @@ session_start();
 <script>
 $(document).ready(Main);
 	
-	function Main(){ 
-	alert("ready");
-
+	function Main(){
 	///////////////////////////////////////////////////////////////
 			//Start of AJAX hit to get All users
 			var obj = {"Action":"ShowAll","Table":"users"};
@@ -84,7 +82,9 @@ $(document).ready(Main);
 				$.ajax(settings);
 				console.log("request send to get roles");
 				//End of AJAX hit to show all rolepermission
-				
+/**********************************************************************/
+////////////////////////////////////////////////////////////////////////
+/**********************************************************************/				
 			//This function is called when users list is received successfully  
 			function successOfShowAll(response){
 				console.log(response);	
@@ -148,7 +148,10 @@ $(document).ready(Main);
 				
 					}
 				}//end of success function of Action:ShowAll
-				
+
+/**********************************************************************/
+////////////////////////////////////////////////////////////////////////
+/**********************************************************************/				
 		
 				//This function is called on delete event 
 						function clickOnDelUserRole(){
@@ -173,7 +176,10 @@ $(document).ready(Main);
 							}
 							return false;
 						}//end of clickOnDelUser
-	///////////////////////////////////////////////////////////////
+
+/**********************************************************************/
+////////////////////////////////////////////////////////////////////////
+/**********************************************************************/
 			function clickOnEditUserRole()
 			{//debugger;
 				var rId=$(this).closest("tr").find("td:first").text();
@@ -196,8 +202,10 @@ $(document).ready(Main);
 				return false;
 			}
 	
-	// ///////////////////////////////////////////////////////////////
-							
+
+/**********************************************************************/
+////////////////////////////////////////////////////////////////////////
+/**********************************************************************/							
 	
 			$("#btnSave").click(function(){
 			var usr=$("#cmbUser").val();
@@ -220,7 +228,10 @@ $(document).ready(Main);
 				$.ajax(settings);
 				console.log('request to save sent');
 			} //end of else			
-		
+
+/**********************************************************************/
+////////////////////////////////////////////////////////////////////////
+/**********************************************************************/		
 		function Mysuccfunction(r){
 			//console.log("SAVE: " +r);
 				if(r.act=="edit")
@@ -236,8 +247,11 @@ $(document).ready(Main);
 			alert('Error occured in saving RolePermission');
 		}
 	});//end of btnSave function	
-		// //////////////////////////////////
-		function addRowInTable(id,d1,d2)
+
+/**********************************************************************/
+////////////////////////////////////////////////////////////////////////
+/**********************************************************************/		
+function addRowInTable(id,d1,d2)
 		{//debugger;
 			var table=$("#grid");
 			var tr1=$("<tr>");
