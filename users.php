@@ -37,8 +37,6 @@ $(document).ready(Main);
 				
 				var getCity={ type: "POST", dataType: "json", url: "api.php",
 				data:ActionObj, success: function(res){console.log(res);
-				var opt=$("<option>").attr("value",0).text("--Select--");
-					$("#cmbcity").append(opt);
 				for(var i=0;i<res.length;i++){
 					var opt=$("<option>").attr("value",res[i].cityId).text(res[i].name);
 					$("#cmbcity").append(opt);
@@ -67,7 +65,7 @@ $(document).ready(Main);
 				
 	//This function is called when users list is received successfully  
 	function successOfShowUser(response){
-					console.log(response);
+			//		console.log(response);
 					var table=$("#grid");
 					for(var i=0;i<response.data.length;i++)
 					{
@@ -103,7 +101,8 @@ $(document).ready(Main);
 							if ($isConfirm == true) {
 								var uid=$(this).closest("tr").find("td:first").text();
 								var ref=this; //ref will store pointer to specific delete button that is clicked.
-								var obj={"Action":"Delete","id":uid};
+//{"Action":"DeleteObj","Table":"roles","PK":"roleid","id":rid}					
+					var obj={"Action":"Delete","Table":"users","PK":"userid","id":uid};
 								var deleteUSer={
 									type: "POST",
 									dataType: "json",
@@ -111,7 +110,7 @@ $(document).ready(Main);
 									data: obj,
 									success: function(r){
 										$(ref).closest("tr").remove();
-										alert("USer is deleted successfully");
+										alert("User is deleted successfully");
 										},
 									error:  function(){alert("Error! in deleting user");}
 								};//end of deleteUSer AJAX hit.
@@ -124,7 +123,6 @@ $(document).ready(Main);
 			function clickOnEditUser()
 			{//debugger;
 				var usrId=$(this).closest("tr").find("td:first").text();
-				alert(usrId);
 				var rowNum=$(this).closest("tr").index();
 				localStorage.setItem("editRowIndex",rowNum);
 				var actionObj={"Action":"Edit","id":usrId};
@@ -135,12 +133,11 @@ $(document).ready(Main);
 						$("#txtUserPassword").val(res.password);
 						$("#txtUserName").val(res.name);
 						$("#txtUserEmail").val(res.email);
-						alert(res.isadmin);
+						
 						if(res.isadmin==0){
-							//alert("IF");
 						$("#rad1").attr("checked",true);
-						}else {
-						//	alert("Else");
+						}
+						else {
 							$("#rad2").attr("checked",true);
 						}		
 							
@@ -262,8 +259,11 @@ $(document).ready(Main);
 		$country="";
 			getAllCountries($conn,$country );
 		?>
+		<br><span><b>City<b></span><br>
+	
 		</select>
 		<select name="cmbcity" id="cmbcity">
+		<option value="0">--Select--</option>
 		</select>
 		<br><br><br>
 		<br><input class="btn" type="button" name="btnSave" id="btnSave" value="Save">
