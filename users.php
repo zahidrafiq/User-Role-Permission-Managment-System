@@ -29,6 +29,30 @@ $(document).ready(Main);
 	
 	function Main(){ 
 	alert("ready");
+			//show all cities of selected country
+			$("#cmbCountries").change(function(){
+				cntryId=$(this).val();
+				$("#cmbcity").empty();
+				var ActionObj={"Action":"cityList","id":cntryId};
+				
+				var getCity={ type: "POST", dataType: "json", url: "api.php",
+				data:ActionObj, success: function(res){console.log(res);
+				var opt=$("<option>").attr("value",0).text("--Select--");
+					$("#cmbcity").append(opt);
+				for(var i=0;i<res.length;i++){
+					var opt=$("<option>").attr("value",res[i].cityId).text(res[i].name);
+					$("#cmbcity").append(opt);
+				}//end of for loop.	
+				},
+				error: function(){alert("Error in getting cities");}
+				
+				};//end of ActionObj.
+				$.ajax(getCity);//hit To server using AJAX
+				console.log("getCity Request send");
+				
+			});//End of cmbCountries change event.
+	
+	
 			//Show all Users 
 			var obj = {"Action":"ShowAllUser"};
 				var settings={
@@ -47,7 +71,6 @@ $(document).ready(Main);
 					var table=$("#grid");
 					for(var i=0;i<response.data.length;i++)
 					{
-						console.log(i);
 						var tr1=$("<tr>");
 						var td1=$("<td>").text(response.data[i].userid);
 						tr1.append(td1);
@@ -102,6 +125,8 @@ $(document).ready(Main);
 			{//debugger;
 				var usrId=$(this).closest("tr").find("td:first").text();
 				alert(usrId);
+				var rowNum=$(this).closest("tr").index();
+				localStorage.setItem("editRowIndex",rowNum);
 				var actionObj={"Action":"Edit","id":usrId};
 				var editUsr={
 					type: "POST",dataType: "json", url:"api.php",data: actionObj,
@@ -154,11 +179,15 @@ $(document).ready(Main);
 				error: OnError
 				};//end of settings.
 				$.ajax(settings);
-				console.log('request sent');
+				console.log('request to save sent');
 			} //end of else			
 		
 		function Mysuccfunction(r){
-				console.log(r['ID']);
+				if(r.act=="edit")
+				{
+					var i=localStorage.getItem("editRowIndex");
+					document.getElementById("grid").deleteRow(i);
+				}
 				addRowInTable(r['ID'],unme,eml);
 		}
 		
@@ -182,7 +211,9 @@ $(document).ready(Main);
 			tr1.append(td1);
 			
 			td1=$("<td>");
+			//$editBtn=$("<button>").text("Edit");
 			$editBtn=$("<button>").text("Edit");
+			$editBtn.click(clickOnEditUser);
 			td1.append($editBtn);
 			tr1.append(td1);
 			
@@ -193,9 +224,8 @@ $(document).ready(Main);
 						
 			td1.append($deleteBtn);
 			tr1.append(td1);
-				table.append(tr1);
-			// debugger;
-			// $deleteBtn.click(delUsr(this)); 
+			table.append(tr1);
+		
 			}//end of addRowInTable.
 	
 
@@ -206,45 +236,9 @@ $(document).ready(Main);
 </script>
 
 
-
-
-
-<?php
-//These variables are used to set values of fields.
-//if form is loaded for edit these variables will be 
-//assigned value of respective user record.
-$logname="";
-$passwd="";
-$email="";
-$uname="";
-$country="";
-$msg="";
-$usrid=-1;
-$role=0;
-/////////////////////////////
-?>
-
-
 </head>
 
 <body>
-<style>
-
-div.formPos {
-    position: absolute;
-    left: 5%;
-	top:15%;
-}
-.gridPos{
-	position: absolute;
-    left: 45%;
-	top:35%;
-	
-}
-
-
-</style>
-<span style='background-color:red'><?php echo $msg ?></span>
 <form method="GET" action="" id="adduserform">
 <div class="formPos" style="width:400px;height:600px;border:5px solid black;background-color:white;" >
 	<h3 class="chngBackgrnd" style="padding-left:60px;font-size:35">Users Managment</h3><br>
@@ -265,8 +259,11 @@ div.formPos {
 		<select name="cmbCountries" id="cmbCountries">
 		<option value="0">--Select--</option>
 		<?php
+		$country="";
 			getAllCountries($conn,$country );
 		?>
+		</select>
+		<select name="cmbcity" id="cmbcity">
 		</select>
 		<br><br><br>
 		<br><input class="btn" type="button" name="btnSave" id="btnSave" value="Save">
@@ -285,8 +282,6 @@ div.formPos {
 	<th>Edit</th>
 	<th>Delete</th>
 </tr>
-<?php //getAllUsers($conn); ?>
-
 </table>
 </div>
 
