@@ -28,7 +28,7 @@ if(isset($_REQUEST['Action']) && !empty($_REQUEST['Action']))
 			}
 		}// end of Show all user's action.
 		else if($action=="ShowAll"){//It will return any table.
-			//format of data {"Action":"ShowAll","Table":"roles"};
+			//format of data {"Action":"ShowAll","Table":"table_name"};
 			$table=$_REQUEST['Table'];
 			$sql="SELECT * FROM $table";
 			$result=mysqli_query($conn,$sql);
@@ -38,11 +38,11 @@ if(isset($_REQUEST['Action']) && !empty($_REQUEST['Action']))
 				$i=0;
 				while($row=mysqli_fetch_assoc($result))
 				{
-					$roles[$i]=$row;
+					$objList[$i]=$row;
 					$i++;
 				}
 				
-				echo json_encode($roles);
+				echo json_encode($objList);
 			}
 		}
 		else if($action=="cityList"){
@@ -217,6 +217,41 @@ if(isset($_REQUEST['Action']) && !empty($_REQUEST['Action']))
 			echo $jsonObj;
 
 		}//End of SavePerm
+		else if($action=="SaveRolePerm"){
+			//data format {"Action":"SaveRolePerm","Role":role,"Perm":per};
+			$role=$_REQUEST['Role'];
+			$perm=$_REQUEST['Perm'];
+			$editID=$_SESSION['editId']; //ID of user which you	want to edit
+	//		echo json_encode($perm."  ".$editID);
+			//if save button is clicked to edit existing record .
+			 if($editID>0)
+			 {
+				$query="UPDATE rolepermission SET roleid='$role' , permissionid='$perm' WHERE id='$editID'";
+				$_SESSION['editId']=-1;
+				$obj=array("ID"=>$editID,"act"=>"edit");
+			}
+			else  //If button is clicked for new record.
+			{	
+	//			$loginUsrId=$_SESSION['loginUserID'];
+				$query="INSERT INTO rolepermission(roleid,permissionid) 
+				VALUES('$role','$perm')";
+			}
+				$b=mysqli_query($conn,$query);
+				if($b==true )
+				{
+					$sql="SELECT * FROM rolepermission WHERE roleid='$role' AND permissionid='$perm'";
+					$result=mysqli_query($conn,$sql);
+					$row=mysqli_fetch_assoc($result);
+					$pId=$row["id"]; //id of permission which record is recently saved or edited.
+					$obj=array("ID"=>$pId); //create obj in php
+					//alert('Added Succesfully');
+				}
+				//print_r($obj);
+			$jsonObj=json_encode($obj); //To Convert in JSON in PHP.
+			echo $jsonObj;
+
+		
+		}//End of Save rolePermission.
 	}//end of outermost if.
 
 	

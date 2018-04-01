@@ -43,7 +43,7 @@ $(document).ready(Main);
 				};//end of settings. Action":"ShowAllUser
 				$.ajax(settings);
 				console.log("request send to get roles");
-	//This function is called when users list is received successfully  
+	//This function is called when roles list is received successfully  
 	function successOfShowAll(response){
 					console.log(response);
 	
@@ -221,7 +221,7 @@ $(document).ready(Main);
 </form>		
 			
 <div>
-<h1 align="center" style="font-size:350%" >Users</h1>
+<h1 align="center" style="font-size:350%" >Roles</h1>
 <table id="grid" class ="gridPos">
 <tr>
 	<th>ID</th>
