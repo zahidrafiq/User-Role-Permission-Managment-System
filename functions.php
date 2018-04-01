@@ -1,42 +1,6 @@
 <?php// require('conn.php');?>
 <script>
-function editUSer(link)
-{
-	var id=link.parentNode.parentNode.cells[0].innerText;
-	window.location.href="users.php?i="+id;
-	//alert(id);
-	return false;
-}
 
-function deleteUser(link)
-{
-	var id=link.parentNode.parentNode.cells[0].innerText;
-	if(confirm("Are You sure you want to delete user"))
-	{
-		window.location.href="usersList.php?i="+id;
-	}
-		return false;
-}
-
-/////////////////////////////////////////////
-// This function redirects to target page  //
-////////////////////////////////////////////
-function editObj(link,targetPageURL)
-{
-	var id=link.parentNode.parentNode.cells[0].innerText;
-	window.location.href=""+targetPageURL+"?i="+id;
-	return false;
-}
-////////////////////////////////////////////
-function deleteObj(link)
-{
-	var id=link.parentNode.parentNode.cells[0].innerText;
-	if(confirm("Are You sure you want to delete user"))
-	{
-		window.location.href=""+"?i="+id;
-	}
-		return false;
-}
 ////////////////////////////////////////////
 function Clear(form)
 {
@@ -66,59 +30,12 @@ function Clear(form)
 		}
 		/////////////////////////////////////////////////
 		
-		function getAllUsers($conn)
-		{
-			$sql="SELECT userid,name,email FROM users";
-			$result=mysqli_query($conn,$sql);
-			$records=mysqli_num_rows($result);
-			if($records>0)
-			{
-				while($row=mysqli_fetch_assoc($result))
-				{
-					$id=$row["userid"];
-					$name=$row["name"];
-					$emal=$row["email"];
-					echo "<tr>";
-					echo "<td>$id</td>";
-					echo "<td>$name</td>";
-					echo "<td>$emal</td>";
-				//	echo "<td><a href='' onclick='return editUSer(this);'>Edit</a></td>";
-					//echo "<td><a href='' onclick='return deleteUser(this);' '$id' name ='deleteLink'>Delete</a></td>";
-					echo "<td><input type='button' value='Edit'/></td>";
-					echo "<td><input type='button' value='Delete'/></td>";
-		
-					echo "</tr>";
-					
-				}
-			}
-			
-		}
-		
-		
-////////////////////////////////////////////////////////
-
 	
-	
-/////////////////////////////////////////////////////////
-	function getCountryById($conn,$d)
-	{
-		$query="SELECT name FROM country WHERE id=".$d;
-		$result=mysqli_query($conn,$query);
-		$records=mysqli_num_rows($result);
-		if($records>0)
-		{
-			$cntry=mysqli_fetch_assoc($result);
-		 return $cntry;
-		}
-		else
-		{
-			echo "Error: in function.php " . $query . "<br>" . mysqli_error($conn);
-		}
-	}
 	
 ////////////////////////////////////////////////////////////
 //    This function is to get any type of object by ID    //
 ///////////////////////////////////////////////////////////
+
 function getObjById($conn,$tableName,$tablePK,$searchId)
 {
 		$query="SELECT * FROM $tableName WHERE $tablePK=".$searchId;
@@ -136,6 +53,8 @@ function getObjById($conn,$tableName,$tablePK,$searchId)
 }
 	?>
 <?php
+
+//used in home.php in regularUserPart.
 	function showPermissions($conn,$rolID)
 		{
 			//echo "ROLE ID : ".$rolID;

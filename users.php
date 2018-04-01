@@ -28,15 +28,14 @@ session_start();
 $(document).ready(Main);
 	
 	function Main(){ 
-	alert("ready");
 			//show all cities of selected country
 			$("#cmbCountries").change(function(){
 				cntryId=$(this).val();
 				$("#cmbcity").empty();
 				var ActionObj={"Action":"cityList","id":cntryId};
-				
+			
 				var getCity={ type: "POST", dataType: "json", url: "api.php",
-				data:ActionObj, success: function(res){console.log(res);
+				data:ActionObj, success: function(res){
 				for(var i=0;i<res.length;i++){
 					var opt=$("<option>").attr("value",res[i].cityId).text(res[i].name);
 					$("#cmbcity").append(opt);
@@ -46,7 +45,7 @@ $(document).ready(Main);
 				
 				};//end of ActionObj.
 				$.ajax(getCity);//hit To server using AJAX
-				console.log("getCity Request send");
+				//console.log("getCity Request send");
 				
 			});//End of cmbCountries change event.
 	
@@ -59,7 +58,7 @@ $(document).ready(Main);
 					url: "api.php",
 					data: obj,
 					success: successOfShowUser,				
-					error: function(){console.log("Error to get user's list");}
+					error: function(){alert("Error to get user's list");}
 				};//end of settings. Action":"ShowAllUser
 				$.ajax(settings);
 				
@@ -141,6 +140,7 @@ $(document).ready(Main);
 							$("#rad2").attr("checked",true);
 						}		
 							
+						
 					},
 					error: function(){alert("ERROR");}
 					
@@ -159,14 +159,15 @@ $(document).ready(Main);
 			var unme=$("#txtUserName").val();
 			var eml=$("#txtUserEmail").val();
 			var cntry=$("#cmbCountries").val();
+			var city=$("#cmbcity").val();
 			var role=$(".radrole:checked").val();
-			if(lgnme=="" || psd=="" || eml=="" || cntry<1 || unme==""){
+			if(lgnme=="" || psd=="" || eml=="" || cntry<1 || city<1 || unme==""){
 				alert ("Please fill all fields!");
 				return false;
 			}
 			else{
 			//	
-			var userObj = {"Action":"Save","Login":lgnme,"Password":psd,"Name":unme,"Email":eml,"Country":cntry,"Role":role};
+			var userObj = {"Action":"Save","Login":lgnme,"Password":psd,"Name":unme,"Email":eml,"Country":cntry,"City":city,"Role":role};
 				var settings={
 				type: "GET",
 				dataType: "json",

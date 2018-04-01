@@ -129,27 +129,31 @@ if(isset($_REQUEST['Action']) && !empty($_REQUEST['Action']))
 				echo json_encode(true);
 			else
 				echo json_encode(false);
-		}
+		}	//To Save User 
 		else if($action=="Save"){
+	//Data format {"Action":"Save","Login":lgnme,"Password":psd,"Name":unme,
+	//"Email":eml,"Country":cntry,"City":city,"Role":role}
 			$log=$_REQUEST['Login'];
 			$paswd=$_REQUEST['Password'];
 			$nme=$_REQUEST['Name'];
 			$emal=$_REQUEST['Email'];
 			$cntry=$_REQUEST['Country'];
+			$city=$_REQUEST['City'];
 			$role=$_REQUEST['Role'];
 			$editId=$_SESSION['editUserId'];
+			
 			//if save button is clicked to edit existing record .
 			if($editId>0)
 			{
-				$query="UPDATE users SET login='$log' , password='$paswd' , name='$nme' ,email='$emal' ,countryid='$cntry' ,isadmin='$role' WHERE userid='$editId'";
+				$query="UPDATE users SET login='$log' , password='$paswd' , name='$nme' ,email='$emal' ,countryid='$cntry',cityid='$city' ,isadmin='$role' WHERE userid='$editId'";
 				$_SESSION['editUserId']=-1;
 				$obj=array("ID"=>$editId,"act"=>"edit");
 			}
 			else  //If button is clicked for new record.
 			{
 				$loginUsrId=$_SESSION['loginUserID'];
-				 $query="INSERT INTO users( login , password , name, email , countryid ,createdon,createdby,isadmin) 
-				VALUES ('$log','$paswd','$nme','$emal','$cntry',current_timestamp,'$loginUsrId','$role')";
+				 $query="INSERT INTO users( login , password , name, email , countryid,cityid ,createdon,createdby,isadmin) 
+				VALUES ('$log','$paswd','$nme','$emal','$cntry','$city',current_timestamp,'$loginUsrId','$role')";
 			}
 				$b=mysqli_query($conn,$query);
 				if($b==true && $editId<0)
@@ -268,9 +272,41 @@ if(isset($_REQUEST['Action']) && !empty($_REQUEST['Action']))
 			//	print_r($obj);
 			$jsonObj=json_encode($obj); //To Convert in JSON in PHP.
 			echo $jsonObj;
-
-		
 		}//End of Save rolePermission.
+/*****************************************************************************/
+		else if($action=="SaveUserRole"){
+			//{"Action":"SaveUserRole","User":usr,"Role":role};
+			$user=$_REQUEST['User']; //userid
+			$role=$_REQUEST['Role'];//releid
+			
+			$editID=$_SESSION['editId']; //ID of user which you	want to edit
+			//echo json_encode($role."  ".$editID);
+			//if save button is clicked to edit existing record .
+			  if($editID>0)
+			  {
+				$query="UPDATE userrole SET userid='$user',roleid='$role' WHERE id='$editID'";
+				$_SESSION['editId']=-1;
+				$obj=array("ID"=>$editID,"act"=>"edit");
+			}
+			else  //If button is clicked for new record.
+			{	
+	//			$loginUsrId=$_SESSION['loginUserID'];
+				$query="INSERT INTO userrole(userid,roleid) 
+				VALUES('$user','$role')";
+			}
+				$b=mysqli_query($conn,$query);
+				if($b==true)
+				{
+					$sql="SELECT * FROM userrole WHERE userid='$user' AND roleid='$role'";
+					$result=mysqli_query($conn,$sql);
+					$row=mysqli_fetch_assoc($result);
+					$pId=$row["id"]; //id of permission which record is recently saved or edited.
+					$obj=array("ID"=>$pId); //create obj in php
+				}
+			//	print_r($obj);
+			$jsonObj=json_encode($obj); //To Convert in JSON in PHP.
+			echo $jsonObj;
+		}
 	}//end of outermost if.
 
 	

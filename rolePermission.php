@@ -181,10 +181,10 @@ $(document).ready(Main);
 				var actionObj={"Action":"GetObjToEdit","Table":"rolepermission","PK":"id","tId":rId};
 				var editUsr={
 					type: "POST",dataType: "json", url:"api.php",data: actionObj,
-					success: function(res){console.log("success"+res.roleid);
+					success: function(res){
 						//Filling form to edit.
-						$("#txtRole").val(res.name);//name of rolepermission.
-						$("#txtDescription").val(res.description);
+						$("#cmbRole").val(res.roleid);//name of rolepermission.
+						$("#cmbPermission").val(res.permissionid);
 							
 					},
 					error: function(){alert("Error in Editing Role");}

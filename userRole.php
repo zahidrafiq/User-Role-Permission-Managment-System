@@ -132,9 +132,7 @@ $(document).ready(Main);
 				//this line will be executed when AJAX hit response will return.
 					td1=$("<td>").text(roleName);
 					tr1.append(td1);
-	/***************************************************************************/
-					
-						
+	/***************************************************************************/		
 					td1=$("<td>");
 					$editBtn=$("<button>").text("Edit");
 					$editBtn.click(clickOnEditUserRole);
@@ -149,8 +147,10 @@ $(document).ready(Main);
 					table.append(tr1);
 				
 					}
-				}//end of success function of Action:ShowAll.
-	//This function is called on delete event 
+				}//end of success function of Action:ShowAll
+				
+		
+				//This function is called on delete event 
 						function clickOnDelUserRole(){
 							var $isConfirm = confirm("Record will be deleted. Click Ok to continue and Cancel to Ignore");
 							if ($isConfirm == true) {
@@ -179,13 +179,13 @@ $(document).ready(Main);
 				var rId=$(this).closest("tr").find("td:first").text();
 				var rowNum=$(this).closest("tr").index();
 				localStorage.setItem("editRowIndex",rowNum);
-				var actionObj={"Action":"GetObjToEdit","Table":"rolepermission","PK":"id","tId":rId};
+				var actionObj={"Action":"GetObjToEdit","Table":"userrole","PK":"id","tId":rId};
 				var editUsr={
 					type: "POST",dataType: "json", url:"api.php",data: actionObj,
-					success: function(res){console.log("success"+res.roleid);
+					success: function(res){
 						//Filling form to edit.
-						$("#txtRole").val(res.name);//name of rolepermission.
-						$("#txtDescription").val(res.description);
+						$("#cmbUser").val(res.userid);//name of userrole
+						$("#cmbRole").val(res.roleid);
 							
 					},
 					error: function(){alert("Error in Editing Role");}
@@ -196,38 +196,19 @@ $(document).ready(Main);
 				return false;
 			}
 	
-	
-			function getRoleName(tId)
-			{
-				////{"Action":"GetObjToEdit","Table":"roles","PK":"roleid","tId":rId}
-				var actionObj={"Action":"GetObjToEdit","Table":"roless","PK":"roleid","tId":tId};
-				var editUsr={
-					type: "POST",dataType: "json", url:"api.php",data: actionObj,
-					success: function(res){console.log("success");
-						//Filling form to edit.
-						var rname=res.name; //name of role.		
-					},
-					error: function(){alert("Error in getting Role Name");}
-					
-				};//end of editUser AJAX hit settings obj 
-				$.ajax(editUsr);
-				console.log("rolename request send");
-				return rname;
-			}
-	
 	// ///////////////////////////////////////////////////////////////
 							
 	
 			$("#btnSave").click(function(){
+			var usr=$("#cmbUser").val();
 			var role=$("#cmbRole").val();
-			var per=$("#cmbPermission").val();
-			if(role=="" || per=="" ){
+			if(role=="" || usr=="" ){
 				alert ("Please fill all fields!");
 				return false;
 			}
 			else{
 			//	
-			var ActionObj = {"Action":"SaveRolePerm","Role":role,"Perm":per};
+			var ActionObj = {"Action":"SaveUserRole","User":usr,"Role":role};
 				var settings={
 				type: "POST",
 				dataType: "json",
@@ -248,7 +229,7 @@ $(document).ready(Main);
 					document.getElementById("grid").deleteRow(i);
 				}
 				//alert(r['ID']);
-				addRowInTable(r['ID'],role,per);
+				addRowInTable(r['ID'],usr,role);
 		}
 		
 		function OnError(){
@@ -300,10 +281,7 @@ $(document).ready(Main);
 				//this line will be executed when AJAX hit response will return.
 					td1=$("<td>").text(roleName);
 					tr1.append(td1);
-	/***************************************************************************/
-			
-			
-			
+	/***************************************************************************/	
 			td1=$("<td>");
 			//$editBtn=$("<button>").text("Edit");
 			$editBtn=$("<button>").text("Edit");

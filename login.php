@@ -16,7 +16,7 @@ function storeLoginHistory($conn,$userObj)
 	$uid=$userObj['userid'];
 	$ulogin=$userObj['login'];
 	$ip = getHostByName(getHostName());
-	//$sql="INSERT INTO loginhistory(userid,login,logintime,machineip) VALUES('$uid','$ulogin',current_timestamp,'$ip')";
+	$sql="INSERT INTO loginhistory(userid,login,logintime,machineip) VALUES('$uid','$ulogin',current_timestamp,'$ip')";
 	mysqli_query($conn,$sql);
 }
 

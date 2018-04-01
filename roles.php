@@ -27,9 +27,7 @@ session_start();
 <script>
 $(document).ready(Main);
 	
-	function Main(){ 
-	alert("ready");
-			
+	function Main(){ 			
 			//Show all Roles
 			var obj = {"Action":"ShowAll","Table":"roles"};
 				var settings={
@@ -42,7 +40,8 @@ $(document).ready(Main);
 					error: function(){console.log("Error to get Role's list");}
 				};//end of settings. Action":"ShowAllUser
 				$.ajax(settings);
-				console.log("request send to get roles");
+		//		console.log("request send to get roles");
+/*************************************************************************/		
 	//This function is called when roles list is received successfully  
 	function successOfShowAll(response){
 					console.log(response);
@@ -76,13 +75,17 @@ $(document).ready(Main);
 				
 					}
 				}//end of success function of Action:ShowAll.
-	//This function is called on delete event 
-						function clickOnDelRole(){
-							var $isConfirm = confirm("Record will be deleted. Click Ok to continue and Cancel to Ignore");
-							if ($isConfirm == true) {
-								var rid=$(this).closest("tr").find("td:first").text();
-								 var ref=this; //ref will store pointer to specific delete button that is clicked.
-								 var obj={"Action":"Delete","Table":"roles","PK":"roleid","id":rid};
+
+/*************************************************************************/
+
+/*************************************************************************/
+		//This function is called on delete event 
+		function clickOnDelRole(){
+		var $isConfirm = confirm("Record will be deleted. Click Ok to continue and Cancel to Ignore");
+		if ($isConfirm == true) {
+		var rid=$(this).closest("tr").find("td:first").text();
+		var ref=this; //ref will store pointer to specific delete button that is clicked.
+	 var obj={"Action":"Delete","Table":"roles","PK":"roleid","id":rid};
 								 var deleteObj={
 									type: "POST",
 									dataType: "json",
