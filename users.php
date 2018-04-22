@@ -132,15 +132,30 @@ $(document).ready(Main);
 						$("#txtUserPassword").val(res.password);
 						$("#txtUserName").val(res.name);
 						$("#txtUserEmail").val(res.email);
-						
+						$("#cmbCountries").val(res.countryid);
+						var ctyId=res.cityid;
+				//TO select city of user
+				$("#cmbcity").empty();
+				var ActionObj={"Action":"cityList","id":res.countryid};
+				var getCity={ type: "POST", dataType: "json", url: "api.php",
+				data:ActionObj, success: function(res){
+				for(var i=0;i<res.length;i++){
+					var opt=$("<option>").attr("value",res[i].cityId).text(res[i].name);
+					if(res[i].cityId==ctyId)
+						opt.attr("selected",true);
+					$("#cmbcity").append(opt);
+				}//end of for loop.	
+				},
+				error: function(){alert("Error in getting cities");}
+				};//end of ActionObj.
+				$.ajax(getCity);//hit To server using AJAX
+			
 						if(res.isadmin==0){
 						$("#rad1").attr("checked",true);
 						}
 						else {
 							$("#rad2").attr("checked",true);
 						}		
-							
-						
 					},
 					error: function(){alert("ERROR");}
 					
@@ -255,7 +270,7 @@ $(document).ready(Main);
 		<span><b>Country<b></span><br>
 		
 		<select name="cmbCountries" id="cmbCountries">
-		<option value="0">--Select--</option>
+		<option value="0">--Select-----</option>
 		<?php
 		$country="";
 			getAllCountries($conn,$country );
